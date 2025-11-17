@@ -1,4 +1,4 @@
-#include "Plane.hpp"
+#include "../include/Plane.hpp"
 
 Plane::Plane(const float& trajectoire, const float& altitude, const float& speed) : trajectoire_(trajectoire), altitude_(altitude), speed_(speed) {
     /*initial_clock_ = high_resolution_clock::now();
