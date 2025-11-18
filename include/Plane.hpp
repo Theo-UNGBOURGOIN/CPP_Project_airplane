@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cmath>
 #include "Agent.hpp"
+#include "APP.hpp"
 
 using std::chrono::duration;
 using std::chrono::high_resolution_clock;
@@ -22,29 +23,27 @@ class APP;
 class TWR; 
 class Journal;
 
-void update_plane(Plane& plane, bool& stop_thread);
 
 class Plane : public Agent {
-	Journal *journal_; 
-	APP* app_ = nullptr; 
-	TWR* twr_ = nullptr; 
+private:
+	// Journal *journal_; 
+	/*APP* app_ = nullptr; 
+	TWR* twr_ = nullptr;*/
 	Position pos_; 
 	Position trajectory_;
-
+	std::string name;  
 	// float radius_ = 0;       A vérifier si les avions tournent en rond ou pas 
 	float speed_ = 0;
-	/*float fuel = 0;
-	float conso = 0;*/  // TDDO: A FAIRE PLUS TARD QUAND AJOUT DE CARBURANT
+	// float fuel = 0;   a ajouter plus tard
+ 	// float conso = 0;  
+	
 
 	// high_resolution_clock::time_point initial_clock_;
 public:
-	Plane(Position pos, const float& speed, const float& fuel, const& target);
+	Plane(const std::string& name, const float& speed, APP* target, TWR* spawn);
 	void run() override; 
 	// request landing 
-	// take of 
-	void updatePos();
-	// set APP et tower
+	// take of ? 
 	Position fgetpos(); 
-
 	~Plane();
 };

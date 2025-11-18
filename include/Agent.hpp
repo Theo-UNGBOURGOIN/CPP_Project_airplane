@@ -5,8 +5,7 @@
 #include <mutex>
 
 class Agent {
-public:
-	
+public: 
 	Agent(const std::string& name);
 	virtual ~Agent(); 
 	void start();       // lance le thread

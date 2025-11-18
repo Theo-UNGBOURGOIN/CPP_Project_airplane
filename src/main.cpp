@@ -4,7 +4,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
-#include "Plane.hpp"
+#include "../include/Plane.hpp"
 
 #ifdef _MSC_VER
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
