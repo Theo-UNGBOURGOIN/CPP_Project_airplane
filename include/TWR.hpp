@@ -1,3 +1,4 @@
+#pragma once 
 #include <cstdlib>
 #include <iostream>
 #include <vector>
@@ -5,13 +6,10 @@
 #include <memory>
 #include <map>
 #include "Plane.hpp"
+#include "Agent.hpp"
 
 
-struct Position {
-    float x_ = 0.;
-    float y_ = 0.;
-    float altitude_ = 0;
-};
+struct Position;
 
 class TWR : public Agent {
     /*std::queue<std::string> queuelanding;
@@ -23,8 +21,8 @@ class TWR : public Agent {
     const int parkingSize_; 
 
 public: 
-    TWR(const std::string name, const int parkingSize);
+    TWR(const std::string name, const int parkingSize, std::mutex& mtx);
     void run() override; 
     Position twrGetPos();
-    ~TWR(); 
+    /*~TWR(); */
 };

@@ -1,6 +1,6 @@
 #include "../include/Agent.hpp"
 
-Agent::Agent(const std::string& name) : name_(name) {}
+Agent::Agent(const std::string& name, std::mutex& mtx) : name_(name) {}
 
 Agent::~Agent() {
 	stop();  // s'assurer que le thread est arrêté à la destruction

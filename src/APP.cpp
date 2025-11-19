@@ -5,12 +5,17 @@
 #include "../include/APP.hpp"
 #include "../include/TWR.hpp"
 
-APP::APP(const std::string name, Position pos, const float& range, TWR* twr) : Agent(name), pos_(pos), range_(range), twr_(twr) {
+APP::APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx) : Agent(name, mtx), range_(range), twr_(twr) {
 
 };
+
+
+void APP::run() {
+	std::cout << "RUN APP" << std::endl;
+}
+
+
 
 Position APP::getPos() {
-
-};
-
-
+	return pos_;
+}

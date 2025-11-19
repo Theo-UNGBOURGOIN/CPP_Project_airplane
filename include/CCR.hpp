@@ -1,8 +1,10 @@
+#pragma once 
 #include <cstdlib>
 #include <iostream>
 #include <vector>
 #include <memory>
 #include "Plane.hpp"
+#include "Agent.hpp"
 
 class CCR : public Agent {
 private:
