@@ -10,5 +10,13 @@ class CCR : public Agent {
 private:
 	std::vector<APP*> app_;
 	std::vector<TWR*> twr_;
+	std::vector<Plane*> plane_; 
 public:
+	CCR(const std::string& name, std::mutex& mtx);
+	void run() override;
+	void handoverToAPP(APP& app);
+	void addPlane(Plane& plane);
+	void deletePlane(Plane& plane);
 };
+
+//run handover add app add plane

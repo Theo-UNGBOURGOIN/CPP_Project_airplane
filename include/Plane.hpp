@@ -7,6 +7,7 @@
 #include "Agent.hpp"
 #include "APP.hpp"
 #include "TWR.hpp"
+#include "CCR.hpp"
 
 using std::chrono::duration;
 using std::chrono::high_resolution_clock;
@@ -36,9 +37,9 @@ private:
     // high_resolution_clock::time_point initial_clock_;
 public:
     Plane(const std::string& name, const float& speed, APP* target, TWR* spawn, std::mutex& mtx);
-    void run() override; 
-    // request landing 
-    // take of ? 
+    void run() override;
+	void requestlanding(APP* target);
+	void takeof(TWR* spawn);
     Position fgetpos(); 
     // ~Plane();
 };

@@ -19,3 +19,7 @@ void APP::run() {
 Position APP::getPos() {
 	return pos_;
 }
+
+void receivePlane(Plane* plane) {
+
+}
