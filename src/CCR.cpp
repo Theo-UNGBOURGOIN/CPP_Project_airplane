@@ -27,13 +27,31 @@ void CCR::run() {
 }
 
 void CCR::handoverToAPP(APP& app, Plane& plane) {
+	// ajouter l'avion à l'app si pas déjà fait dans le vecteur avion de l'app
+	if (std::find(app.planeInRange_.begin(), app.planeInRange_.end(), &plane) != app.planeInRange_.end()) {
+		// l'avion est déjà dans la liste
+		return;
+	}
+	app.planeInRange_.push_back(&plane);
+};
+
+void CCR::addPlane(Plane& plane) {
+	// avec ::find pour vérifier si l'avion est déjà dans la liste de CCR
+	// si pas dans la liste on l'ajoute
+	if( std::find(plane_.begin(), plane_.end(), &plane) != plane_.end()) {
+		// l'avion est déjà dans la liste
+		return;
+	}
+	plane_.push_back(&plane);
 	
 };
 
-void CCR::addPlane(APP& app, Plane& plane) {
-
-};
-
 void CCR::deletePlane(APP& app, Plane& plane) {
-
+	// avec ::find pour vérifier si l'avion est dans la liste
+	// si dans la liste on le supprime
+	if( std::find(app.planeInRange_.begin(), app.planeInRange_.end(), &plane) == app.planeInRange_.end()) {
+		// l'avion n'est pas dans la liste
+		return;
+	}
+	app.planeInRange_.erase(std::remove(app.planeInRange_.begin(), app.planeInRange_.end(), &plane), app.planeInRange_.end());
 };
