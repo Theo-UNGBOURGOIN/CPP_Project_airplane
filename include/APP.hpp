@@ -22,6 +22,7 @@ private:
 public: 
     APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx);
     void run() override;
+	float getRadius();
     Position getPos();
     void receivePlane(Plane* plane);    // appelé par CCR pour handover l'avion si il est dans la range et si c'est le bon aéropoprt 
     

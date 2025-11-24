@@ -11,15 +11,17 @@ CCR::CCR(const std::string& name, std::mutex& mtx) : Agent(name, mtx) {
 };
 
 void CCR::run() {
-	for(v in app_){
-		for (p in plane_) {
-			if (){
-
+	while(true){
+		for (auto a : app_) {
+			for ( auto p : plane_) {
+				if( pow( p->fgetpos().x_ - a->getPos().x_ , 2 ) + pow(p->fgetpos().y_ - a->getPos().y_, 2) < a->getRadius()) {
+					handoverToAPP(a, p);
+				}
+				else {
+					deletePlane(a, p);
+				}
 			}
-			// et if plane is in range (verifier que les coordonnées sont dans le cerlce ) alors handover 
-			// pas besoin de verifier si c'est la bonne target on verifie dans tout les cas et on donne 
-			// (c'est pour le au cas ou il y un probleme)
-			// else on delete
+			
 		}
 	}
 }
@@ -28,10 +30,10 @@ void CCR::handoverToAPP(APP& app, Plane& plane) {
 	
 };
 
-void CCR::addPlane(Plane& plane) {
+void CCR::addPlane(APP& app, Plane& plane) {
 
 };
 
-void CCR::deletePlane(Plane& plane) {
+void CCR::deletePlane(APP& app, Plane& plane) {
 
 };

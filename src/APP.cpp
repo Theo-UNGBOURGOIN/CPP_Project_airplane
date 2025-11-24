@@ -12,9 +12,12 @@ APP::APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx) 
 
 void APP::run() {
 	std::cout << "RUN APP" << std::endl;
+}; 
+
+
+float APP::getRadius() {
+	return range_;
 }
-
-
 
 Position APP::getPos() {
 	return pos_;
