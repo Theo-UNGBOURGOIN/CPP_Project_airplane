@@ -22,6 +22,7 @@ private:
 public: 
     APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx);
     void run() override;
+	float getRadius();
     Position getPos();
     bool isPlaneInRange(Plane& plane);
     void addPlane(Plane* plane); 
