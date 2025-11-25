@@ -18,12 +18,13 @@ private:
     // Journal* journal; 
     std::vector<Plane*> planeInRange_; 
     TWR* twr_; 
-    const float range_;  
+    const float range_;
 public: 
     APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx);
     void run() override;
     Position getPos();
-    void receivePlane(Plane* plane);    // appelé par CCR pour handover l'avion si il est dans la range et si c'est le bon aéropoprt 
-    
-    
+    bool isPlaneInRange(Plane& plane);
+    void addPlane(Plane* plane); 
+    void delPlane(Plane* plane); 
+    float getRadius(); 
 };

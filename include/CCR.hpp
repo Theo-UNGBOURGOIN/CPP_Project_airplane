@@ -14,9 +14,9 @@ private:
 public:
 	CCR(const std::string& name, std::mutex& mtx);
 	void run() override;
-	void handoverToAPP(APP& app);
-	void addPlane(Plane& plane);
-	void deletePlane(Plane& plane);
+	void handoverToAPP(APP* app, Plane* plane);
+	void addPlane(Plane& plane); 
+	void addAPP(APP& app); 
 };
 
 //run handover add app add plane

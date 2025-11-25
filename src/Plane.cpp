@@ -29,6 +29,7 @@ void Plane::run() {
 		pos_.y_ += trajectory_.y_ * speed_ * 0.1f;
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
+	std::cout << "PLANE LANDED" << std::endl;
 };
 
 void Plane::requestlanding(APP *target) {
@@ -37,7 +38,7 @@ void Plane::requestlanding(APP *target) {
 	// fais le code 
 
 	if (pow(pos_.x_ - target->getPos().x_, 2) + pow(pos_.y_ - target->getPos().y_, 2) < 50) { 
-		target->receivePlane(this);
+		//target->receivePlane(this);
 	}
 };
 
