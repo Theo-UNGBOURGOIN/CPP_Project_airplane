@@ -27,19 +27,19 @@ void Plane::run() {
 	while (isRunning()) {
 		pos_.x_ += trajectory_.x_ * speed_ * 0.1f;
 		pos_.y_ += trajectory_.y_ * speed_ * 0.1f;
+		mtx_.lock();
+		std::cout << "Pos: " << name_ << "   " << (*this).fgetpos().x_ << "   " << (*this).fgetpos().y_ << "   " << (*this).fgetpos().altitude_ << std::endl;
+		mtx_.unlock(); 
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		
 	}
-	std::cout << "PLANE LANDED" << std::endl;
+	std::cout << "Plane " << name_ << " LANDED" << std::endl;
 };
 
 void Plane::requestlanding(APP *target) {
-	// if dans la zone du bon app alors tu request landing a app 
-	// sinon tu continues d'avance
-	// fais le code 
-
-	if (pow(pos_.x_ - target->getPos().x_, 2) + pow(pos_.y_ - target->getPos().y_, 2) < 50) { 
-		//target->receivePlane(this);
-	}
+    if (target->isPlaneInRange(*this)) {
+        target->getTwr()->landing(this);
+    }
 };
 
 void Plane::takeof(TWR* spawn) {

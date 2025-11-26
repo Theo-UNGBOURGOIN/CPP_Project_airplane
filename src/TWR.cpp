@@ -17,6 +17,22 @@ void TWR::run() {
 	std::cout << "RUN TWR" << std::endl;
 }
 
+void TWR::landing(Plane* plane) {
+	// check si il y a de la place dans le parking et si l'avion n'est pas déjà garé
+	// si oui stop plane 
+	if (parkingSize_ - Parking.size() > 0 && std::find(Parking.begin(), Parking.end(), plane) == Parking.end()) {
+		Parking.push_back(plane);
+		plane->stop();
+		std::cout << "Landing" << std::endl; 
+		return; 
+	}
+
+}
+
 Position TWR::twrGetPos() {
 	return pos_;
+}
+
+std::vector<Plane*>& TWR::getParking() { 
+	return Parking;
 }

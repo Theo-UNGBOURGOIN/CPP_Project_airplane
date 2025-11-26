@@ -45,6 +45,6 @@ void APP::delPlane(Plane* plane) {
 	}
 };
 
-float APP::getRadius() {
-	return range_; 
-};
+TWR* APP::getTwr() {
+	return twr_;
+}

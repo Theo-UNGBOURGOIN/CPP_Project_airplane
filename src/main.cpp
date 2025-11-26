@@ -31,13 +31,15 @@ int main(void) {
     APP appParis("APP2", 50.0f, &twrParis, mtx);
     std::cout << "APPs created" << std::endl;
     /*----------------------------------------*/
-    Plane plane("Plane1", 50, &appParis, &twrLille, mtx);
+    Plane planeAFR10("AFR10", 50, &appParis, &twrLille, mtx);
+	Plane planeAFR50("AFR50", 20, &appParis, &twrLille, mtx);
     std::cout << "Plane created" << std::endl;
     /*----------------------------------------*/
 
 	CCR.addAPP(appLille);
 	CCR.addAPP(appParis);
-	CCR.addPlane(plane);
+	CCR.addPlane(planeAFR10);
+	CCR.addPlane(planeAFR50);
 	std::cout << "CCR configured" << std::endl;
 
 	twrLille.start();
@@ -45,14 +47,14 @@ int main(void) {
 	appLille.start();
 	appParis.start();
 	CCR.start();
-	plane.start();
+	planeAFR10.start();
+    planeAFR50.start(); 
     std::cout << "All threads started" << std::endl;
 
-
+    // boucle while qui tourne et affiche les positions de avions mais en affiche les deux en meme temps et stop l'affichage des postions si l'avions a landed
     while (true) {
-        std::cout << "Pos Plane1: " << plane.fgetpos().x_ << " " << plane.fgetpos().y_ << " " << plane.fgetpos().altitude_ << std::endl;
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
+        
+    };
 
     return 0;
  }

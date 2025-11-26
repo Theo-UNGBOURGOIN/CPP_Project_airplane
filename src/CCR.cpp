@@ -14,10 +14,10 @@ void CCR::run() {
 	while (isRunning()) {
 		for (auto a : app_) {
 			for (auto p : plane_) {
-				if (pow(p->fgetpos().x_ - a->getPos().x_, 2) + pow(p->fgetpos().y_ - a->getPos().y_, 2) < pow(a->getRadius(), 2)) {
-					handoverToAPP(a, p); 
+				if (pow(p->fgetpos().x_ - a->getPos().x_, 2) + pow(p->fgetpos().y_ - a->getPos().y_, 2) < pow(a->getRadius(), 2) && std::find(a->getTwr()->getParking().begin(), a->getTwr()->getParking().end(), p) == a->getTwr()->getParking().end()) {
+					handoverToAPP(a, p);
 					std::cout << "PLANE HANDOVER" << std::endl;
-					p->stop();
+					a->getTwr()->landing(p);
 				}
 				else {
 				    a->delPlane(p);

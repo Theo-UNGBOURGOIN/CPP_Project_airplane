@@ -17,7 +17,7 @@ private:
 	Position pos_;
     // Journal* journal; 
     std::vector<Plane*> planeInRange_; 
-    TWR* twr_; 
+    TWR* twr_;
     const float range_;
 public: 
     APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx);
@@ -27,5 +27,5 @@ public:
     bool isPlaneInRange(Plane& plane);
     void addPlane(Plane* plane); 
     void delPlane(Plane* plane); 
-    float getRadius(); 
+    TWR* getTwr();
 };
