@@ -7,7 +7,7 @@
 
 
 APP::APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx) : Agent(name, mtx), range_(range), twr_(twr) {
-
+	pos_ = twr->twrGetPos();
 };
 
 void APP::run() {
@@ -21,6 +21,7 @@ float APP::getRadius() {
 
 Position APP::getPos() {
 	return pos_;
+	// return twr_->twrGetPos();
 }
 
 bool APP::isPlaneInRange(Plane& plane){

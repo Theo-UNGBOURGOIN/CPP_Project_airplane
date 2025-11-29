@@ -2,24 +2,23 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <cmath>
 #include <SFML/Graphics.hpp>
 #include "../include/Plane.hpp"
 
 using namespace sf;
 constexpr unsigned WINDOW_SIZE_X = 1000, WINDOW_SIZE_Y = 800;
 
- #ifdef _MSC_VER
- #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
- #define _PATH_IMG_ "C:/SFML_3.0.2/img/"
- #else
- // #define _PATH_IMG_ "../img/"
- #define _PATH_IMG_ "./img/"
- #endif
- const std::string path_image(PATH_IMG);
+#ifdef _MSC_VER
+// #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#define _PATH_IMG_ "C:/SFML_3.0.2/img/"
+#else
+#define _PATH_IMG_ "./img/"
+#endif
 
 void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
     RenderWindow window(VideoMode({ WINDOW_SIZE_X, WINDOW_SIZE_Y }), "Air Traffic Control");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
 
     // Charger la carte
     Texture backgroundImage;
@@ -31,14 +30,14 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
     // Charger la texture de l'avion
     Texture planeTexture;
-    if (!planeTexture.loadFromFile(std::string(_PATH_IMG_)+"plane.png")) {
+    if (!planeTexture.loadFromFile(std::string(_PATH_IMG_) + "plane.png")) {
         std::cerr << "Erreur chargement avion" << std::endl;
         return;
     }
 
     // Charger la texture de l'APP
     Texture appTexture;
-    if (!appTexture.loadFromFile(std::string(_PATH_IMG_)+"airport.png")) {
+    if (!appTexture.loadFromFile(std::string(_PATH_IMG_) + "airport.png")) {
         std::cerr << "Erreur chargement APP" << std::endl;
         return;
     }
@@ -47,7 +46,10 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
     std::vector<Sprite> appShapes;
     for (auto* appPtr : apps) {
         Sprite appSprite(appTexture);
-        appSprite.setScale({ 0.1f, 0.1f });
+        appSprite.setScale({ 0.2f, 0.2f });
+        // Centrer l'origine du sprite
+        Vector2u texSize = appTexture.getSize();
+        appSprite.setOrigin({ texSize.x / 2.0f, texSize.y / 2.0f });
         appShapes.push_back(appSprite);
     }
 
@@ -55,11 +57,10 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
     std::vector<Sprite> planeShapes;
     for (auto* planePtr : planes) {
         Sprite planeSprite(planeTexture);
-        planeSprite.setScale({ 0.1f, 0.1f });
-
-        Position direction = planePtr->getTrajectory();  
-        float angle = std::atan2(direction.y_, direction.x_) * 180.f / 3.14159265f;
-        planeSprite.setRotation(sf::degrees(angle + 90.f)); 
+        planeSprite.setScale({ 0.07f, 0.07f }); 
+        // Centrer l'origine du sprite
+        Vector2u texSize = planeTexture.getSize();
+        planeSprite.setOrigin({ texSize.x / 2.0f, texSize.y / 2.0f });
         planeShapes.push_back(planeSprite);
     }
 
@@ -77,15 +78,21 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
         // Dessiner les APPs 
         for (size_t i = 0; i < appShapes.size(); ++i) {
-            appShapes[i].setPosition({ apps[i]->getPos().x_, apps[i]->getPos().y_ });
+            float appX = apps[i]->getPos().x_;
+            float appY = apps[i]->getPos().y_;
+            appShapes[i].setPosition({ appX, appY });
             window.draw(appShapes[i]);
         }
 
         // Mettre à jour et dessiner tous les avions
         for (size_t i = 0; i < planeShapes.size(); ++i) {
-            planeShapes[i].setPosition({ planes[i]->fgetpos().x_, planes[i]->fgetpos().y_ });
-            // ici mettre la bonne rotation de l'avion dirigé vers l'app avec setrotation je crois
-
+            float planeX = planes[i]->fgetpos().x_;
+            float planeY = planes[i]->fgetpos().y_;
+            planeShapes[i].setPosition({ planeX, planeY });
+            
+            Position direction = planes[i]->getTrajectory();
+            float angle = std::atan2(direction.y_, direction.x_) * 180.f / 3.14159265f;
+            planeShapes[i].setRotation(sf::degrees(angle + 90.f));
             window.draw(planeShapes[i]);
         }
 
@@ -100,37 +107,47 @@ int main(void) {
     CCR CCR("GLOBAL", mtx);
     std::cout << "CCR CREATED" << std::endl;
 
-    TWR twrLille("LILLE", 10, mtx, 1000, 1000);
-    TWR twrParis("PARIS", 10, mtx, 2000, 2000);
+    TWR twrLille("LILLE", 10, mtx, 200.0f, 150.0f);  
+    TWR twrParis("PARIS", 10, mtx, 700.0f, 600.0f);  
+    TWR twrMadrid("MADRID", 10, mtx, 200.0f, 600.0f);
     std::cout << "TWRs created" << std::endl;
 
-    APP appLille("APP1", 50.0f, &twrLille, mtx);
-    APP appParis("APP2", 50.0f, &twrParis, mtx);
+    APP appLille("APP_LILLE", 1.0f, &twrLille, mtx);
+    APP appParis("APP_PARIS", 1.0f, &twrParis, mtx);
+	APP appMadrid("APP_MADRID", 1.0f, &twrMadrid, mtx);
     std::cout << "APPs created" << std::endl;
 
-    Plane planeAFR10("AFR10", 50, &appParis, &twrLille, mtx);
+    Plane planeAFR10("AFR10", 20, &appLille, &twrMadrid, mtx);
     Plane planeAFR50("AFR50", 20, &appParis, &twrLille, mtx);
-    std::cout << "Plane created" << std::endl;
+    Plane planeA380("A380", 20, &appLille, &twrParis, mtx);
+    std::cout << "Planes created" << std::endl;
 
     CCR.addAPP(appLille);
     CCR.addAPP(appParis);
+	CCR.addAPP(appMadrid);
     CCR.addPlane(planeAFR10);
     CCR.addPlane(planeAFR50);
+    CCR.addPlane(planeA380);
     std::cout << "CCR configured" << std::endl;
-
 
     twrLille.start();
     twrParis.start();
+	twrMadrid.start();
     appLille.start();
     appParis.start();
+	appMadrid.start();
     CCR.start();
     planeAFR10.start();
     planeAFR50.start();
-    std::cout << "All threads started" << std::endl;
+    planeA380.start();
 
-    std::vector<APP*> apps = { &appLille, &appParis };
-    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50 };
+    std::vector<APP*> apps = { &appLille, &appParis, &appMadrid};
+    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380 };
+
     initWindow(apps, planes);
 
+	planeAFR10.stop();
+	planeAFR50.stop();
+	planeA380.stop();
     return 0;
 }
