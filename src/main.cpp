@@ -8,15 +8,14 @@
 using namespace sf;
 constexpr unsigned WINDOW_SIZE_X = 1000, WINDOW_SIZE_Y = 800;
 
- //#ifdef _MSC_VER
- //#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
- //#define _PATH_IMG_ "C:/Program Files/SFML/img/"
- //#else
- //// #define _PATH_IMG_ "../img/"
- //#define _PATH_IMG_ "./img/"
- //#endif
- //const std::string path_image(PATH_IMG);
-
+ #ifdef _MSC_VER
+ #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+ #define _PATH_IMG_ "C:/SFML_3.0.2/img/"
+ #else
+ // #define _PATH_IMG_ "../img/"
+ #define _PATH_IMG_ "./img/"
+ #endif
+ const std::string path_image(PATH_IMG);
 
 void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
     RenderWindow window(VideoMode({ WINDOW_SIZE_X, WINDOW_SIZE_Y }), "Air Traffic Control");
@@ -24,7 +23,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
     // Charger la carte
     Texture backgroundImage;
-    if (!backgroundImage.loadFromFile("C:/SFML_3.0.2/img/europe2.png")) {
+    if (!backgroundImage.loadFromFile(std::string(_PATH_IMG_) + "europe2.png")) {
         std::cerr << "Erreur chargement carte" << std::endl;
         return;
     }
@@ -32,14 +31,14 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
     // Charger la texture de l'avion
     Texture planeTexture;
-    if (!planeTexture.loadFromFile("C:/SFML_3.0.2/img/plane.png")) {
+    if (!planeTexture.loadFromFile(std::string(_PATH_IMG_)+"plane.png")) {
         std::cerr << "Erreur chargement avion" << std::endl;
         return;
     }
 
     // Charger la texture de l'APP
     Texture appTexture;
-    if (!appTexture.loadFromFile("C:/SFML_3.0.2/img/airport.png")) {
+    if (!appTexture.loadFromFile(std::string(_PATH_IMG_)+"airport.png")) {
         std::cerr << "Erreur chargement APP" << std::endl;
         return;
     }
