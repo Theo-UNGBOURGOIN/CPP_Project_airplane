@@ -50,3 +50,7 @@ Position Plane::fgetpos() {
 	return pos_;
 };
 
+Position Plane::getTrajectory() {
+	return trajectory_;
+};
+

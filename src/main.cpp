@@ -56,6 +56,10 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
     for (auto* planePtr : planes) {
         Sprite planeSprite(planeTexture);
         planeSprite.setScale({ 0.1f, 0.1f });
+
+        Position direction = planePtr->getTrajectory();  
+        float angle = std::atan2(direction.y_, direction.x_) * 180.f / 3.14159265f;
+        planeSprite.setRotation(sf::degrees(angle + 90.f)); 
         planeShapes.push_back(planeSprite);
     }
 
