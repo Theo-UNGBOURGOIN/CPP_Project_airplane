@@ -110,21 +110,25 @@ int main(void) {
     TWR twrBordeaux("BORDEAUX", 10, mtx, 400.0f, 950.0f);  
     TWR twrParis("PARIS", 10, mtx, 750.0f, 350.0f);  
     TWR twrMarseille("MARSEILLE", 10, mtx, 1000.0f, 1125.0f);
+    TWR twrLille("LILLE", 10, mtx, 810.0f, 120.0f);
     std::cout << "TWRs created" << std::endl;
 
     APP appBordeaux("APP_BORDEAUX", 5.0f, &twrBordeaux, mtx);
     APP appParis("APP_PARIS", 5.0f, &twrParis, mtx);
 	APP appMarseille("APP_MARSEILLE", 5.0f, &twrMarseille, mtx);
+	APP appLille("APP_LILLE", 5.0f, &twrLille, mtx);
     std::cout << "APPs created" << std::endl;
 
     Plane planeAFR10("AFR10", 35, &appBordeaux, &twrMarseille, mtx);
     Plane planeAFR50("AFR50", 35, &appParis, &twrBordeaux, mtx);
-    Plane planeA380("A380", 35, &appBordeaux, &twrParis, mtx);
+    Plane planeA380("AIM90", 35, &appBordeaux, &twrParis, mtx);
+	Plane planeDLH20("DLH20", 35, &appBordeaux, &twrLille, mtx);
     std::cout << "Planes created" << std::endl;
 
     CCR.addAPP(appBordeaux);
     CCR.addAPP(appParis);
 	CCR.addAPP(appMarseille);
+    CCR.addAPP(appLille);
     CCR.addPlane(planeAFR10);
     CCR.addPlane(planeAFR50);
     CCR.addPlane(planeA380);
@@ -133,21 +137,25 @@ int main(void) {
     twrBordeaux.start();
     twrParis.start();
 	twrMarseille.start();
+    twrLille.start();
     appBordeaux.start();
     appParis.start();
 	appMarseille.start();
+    appLille.start();
     CCR.start();
     planeAFR10.start();
     planeAFR50.start();
     planeA380.start();
+    planeDLH20.start();
 
-    std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille};
-    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380 };
+    std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille, &appLille };
+    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20 };
 
     initWindow(apps, planes);
 
 	planeAFR10.stop();
 	planeAFR50.stop();
 	planeA380.stop();
+    planeDLH20.stop();
     return 0;
 }
