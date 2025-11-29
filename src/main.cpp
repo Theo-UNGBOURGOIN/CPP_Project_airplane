@@ -7,7 +7,7 @@
 #include "../include/Plane.hpp"
 
 using namespace sf;
-constexpr unsigned WINDOW_SIZE_X = 1000, WINDOW_SIZE_Y = 800;
+constexpr unsigned WINDOW_SIZE_X = 1500, WINDOW_SIZE_Y = 1500;
 
 #ifdef _MSC_VER
 // #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
@@ -22,7 +22,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
     // Charger la carte
     Texture backgroundImage;
-    if (!backgroundImage.loadFromFile(std::string(_PATH_IMG_) + "europe2.png")) {
+    if (!backgroundImage.loadFromFile(std::string(_PATH_IMG_) + "carte-relief-France.jpg")) {
         std::cerr << "Erreur chargement carte" << std::endl;
         return;
     }
@@ -57,7 +57,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
     std::vector<Sprite> planeShapes;
     for (auto* planePtr : planes) {
         Sprite planeSprite(planeTexture);
-        planeSprite.setScale({ 0.07f, 0.07f }); 
+        planeSprite.setScale({ 0.1f, 0.1f }); 
         // Centrer l'origine du sprite
         Vector2u texSize = planeTexture.getSize();
         planeSprite.setOrigin({ texSize.x / 2.0f, texSize.y / 2.0f });
@@ -107,41 +107,41 @@ int main(void) {
     CCR CCR("GLOBAL", mtx);
     std::cout << "CCR CREATED" << std::endl;
 
-    TWR twrLille("LILLE", 10, mtx, 200.0f, 150.0f);  
-    TWR twrParis("PARIS", 10, mtx, 700.0f, 600.0f);  
-    TWR twrMadrid("MADRID", 10, mtx, 200.0f, 600.0f);
+    TWR twrBordeaux("BORDEAUX", 10, mtx, 400.0f, 950.0f);  
+    TWR twrParis("PARIS", 10, mtx, 750.0f, 350.0f);  
+    TWR twrMarseille("MARSEILLE", 10, mtx, 1000.0f, 1125.0f);
     std::cout << "TWRs created" << std::endl;
 
-    APP appLille("APP_LILLE", 1.0f, &twrLille, mtx);
-    APP appParis("APP_PARIS", 1.0f, &twrParis, mtx);
-	APP appMadrid("APP_MADRID", 1.0f, &twrMadrid, mtx);
+    APP appBordeaux("APP_BORDEAUX", 5.0f, &twrBordeaux, mtx);
+    APP appParis("APP_PARIS", 5.0f, &twrParis, mtx);
+	APP appMarseille("APP_MARSEILLE", 5.0f, &twrMarseille, mtx);
     std::cout << "APPs created" << std::endl;
 
-    Plane planeAFR10("AFR10", 20, &appLille, &twrMadrid, mtx);
-    Plane planeAFR50("AFR50", 20, &appParis, &twrLille, mtx);
-    Plane planeA380("A380", 20, &appLille, &twrParis, mtx);
+    Plane planeAFR10("AFR10", 35, &appBordeaux, &twrMarseille, mtx);
+    Plane planeAFR50("AFR50", 35, &appParis, &twrBordeaux, mtx);
+    Plane planeA380("A380", 35, &appBordeaux, &twrParis, mtx);
     std::cout << "Planes created" << std::endl;
 
-    CCR.addAPP(appLille);
+    CCR.addAPP(appBordeaux);
     CCR.addAPP(appParis);
-	CCR.addAPP(appMadrid);
+	CCR.addAPP(appMarseille);
     CCR.addPlane(planeAFR10);
     CCR.addPlane(planeAFR50);
     CCR.addPlane(planeA380);
     std::cout << "CCR configured" << std::endl;
 
-    twrLille.start();
+    twrBordeaux.start();
     twrParis.start();
-	twrMadrid.start();
-    appLille.start();
+	twrMarseille.start();
+    appBordeaux.start();
     appParis.start();
-	appMadrid.start();
+	appMarseille.start();
     CCR.start();
     planeAFR10.start();
     planeAFR50.start();
     planeA380.start();
 
-    std::vector<APP*> apps = { &appLille, &appParis, &appMadrid};
+    std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille};
     std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380 };
 
     initWindow(apps, planes);

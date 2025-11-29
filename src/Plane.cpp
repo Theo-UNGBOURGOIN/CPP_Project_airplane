@@ -7,7 +7,7 @@
 // void requestlanding 
 // void takeof 
 
-Plane::Plane(const std::string& name, const float& speed, APP* target, TWR* spawn, std::mutex& mtx) : Agent(name, mtx), speed_(speed) {
+Plane::Plane(const std::string& name, const float& speed, APP* target, TWR* spawn, std::mutex& mtx) : target_(target), Agent(name, mtx), speed_(speed) {
 	Position pos;
 	pos.altitude_ = 0; // altitude de départ
 	pos.x_ = spawn->twrGetPos().x_;
@@ -32,7 +32,18 @@ void Plane::run() {
 		mtx_.unlock(); 
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		
+		Position currentPos = fgetpos();
+		float dx = target_->getPos().x_ - currentPos.x_;
+		float dy = target_->getPos().y_ - currentPos.y_;
+		float distance = sqrt(dx * dx + dy * dy);
+
+		if (distance < target_->getRadius()) {
+			std::cout << "Plane " << name_ << " is close to target, requesting landing..." << std::endl;
+			target_->getTwr()->landing(this);  
+			break;  
+		}
 	}
+
 	std::cout << "Plane " << name_ << " LANDED" << std::endl;
 };
 

@@ -33,7 +33,7 @@ private:
     float speed_ = 0;
     // float fuel = 0;   a ajouter plus tard
     // float conso = 0;  
-    
+    APP* target_; 
     // high_resolution_clock::time_point initial_clock_;
 public:
     Plane(const std::string& name, const float& speed, APP* target, TWR* spawn, std::mutex& mtx);
