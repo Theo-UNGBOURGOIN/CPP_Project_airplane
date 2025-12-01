@@ -27,7 +27,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
         return;
     }
     Sprite backgroundSprite(backgroundImage);
-
+    backgroundSprite.scale({0.9f,0.9f}); 
     // Charger la texture de l'avion
     Texture planeTexture;
     if (!planeTexture.loadFromFile(std::string(_PATH_IMG_) + "plane.png")) {
@@ -107,16 +107,18 @@ int main(void) {
     CCR CCR("GLOBAL", mtx);
     std::cout << "CCR CREATED" << std::endl;
 
-    TWR twrBordeaux("BORDEAUX", 10, mtx, 400.0f, 950.0f);  
-    TWR twrParis("PARIS", 10, mtx, 750.0f, 350.0f);  
-    TWR twrMarseille("MARSEILLE", 10, mtx, 1000.0f, 1125.0f);
-    TWR twrLille("LILLE", 10, mtx, 810.0f, 120.0f);
+    TWR twrBordeaux("BORDEAUX", 10, mtx, 360.0f, 855.0f);  
+    TWR twrParis("PARIS", 10, mtx, 675.0f, 315.0f);  
+    TWR twrMarseille("MARSEILLE", 10, mtx, 900.0f, 1013.0f);
+    TWR twrLille("LILLE", 10, mtx, 729.0f, 108.0f);
+    TWR twrBonifacio("BONIFACIO", 10, mtx, 1300.0f, 1240.0f); 
     std::cout << "TWRs created" << std::endl;
 
     APP appBordeaux("APP_BORDEAUX", 5.0f, &twrBordeaux, mtx);
     APP appParis("APP_PARIS", 5.0f, &twrParis, mtx);
 	APP appMarseille("APP_MARSEILLE", 5.0f, &twrMarseille, mtx);
 	APP appLille("APP_LILLE", 5.0f, &twrLille, mtx);
+	APP appBonifacio("APP_BONIFACIO", 5.0f, &twrBonifacio, mtx);
     std::cout << "APPs created" << std::endl;
 
     Plane planeAFR10("AFR10", 35, &appBordeaux, &twrMarseille, mtx);
@@ -129,6 +131,7 @@ int main(void) {
     CCR.addAPP(appParis);
 	CCR.addAPP(appMarseille);
     CCR.addAPP(appLille);
+    CCR.addAPP(appBonifacio); 
     CCR.addPlane(planeAFR10);
     CCR.addPlane(planeAFR50);
     CCR.addPlane(planeA380);
@@ -138,17 +141,19 @@ int main(void) {
     twrParis.start();
 	twrMarseille.start();
     twrLille.start();
+    twrBonifacio.start(); 
     appBordeaux.start();
     appParis.start();
 	appMarseille.start();
     appLille.start();
+    appBonifacio.start();
     CCR.start();
     planeAFR10.start();
     planeAFR50.start();
     planeA380.start();
     planeDLH20.start();
 
-    std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille, &appLille };
+    std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille, &appLille, &appBonifacio};
     std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20 };
 
     initWindow(apps, planes);
