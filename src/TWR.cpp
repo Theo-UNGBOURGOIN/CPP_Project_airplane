@@ -18,15 +18,22 @@ void TWR::run() {
 }
 
 void TWR::landing(Plane* plane) {
-	// check si il y a de la place dans le parking et si l'avion n'est pas déjà garé
-	// si oui stop plane 
-	if (parkingSize_ - Parking.size() > 0 && std::find(Parking.begin(), Parking.end(), plane) == Parking.end()) {
-		Parking.push_back(plane);
-		plane->stop();
-		std::cout << "Landing" << std::endl; 
-		return; 
-	}
-
+    if (placeInParking() && std::find(Parking.begin(), Parking.end(), plane) == Parking.end()) {
+        // Vérifier que l'avion est très proche de la TWR
+        Position planePos = plane->fgetpos();
+        Position twrPos = this->twrGetPos();
+        float dx = twrPos.x_ - planePos.x_;
+        float dy = twrPos.y_ - planePos.y_;
+        float distance = sqrt(dx * dx + dy * dy);
+        if (distance < 5.0f) {
+            Parking.push_back(plane);
+            plane->stop();
+            std::cout << "Landing" << std::endl;
+        }
+    }
+    else {
+        plane->setState(statePlane::HOLDING);
+    }
 }
 
 Position TWR::twrGetPos() {
