@@ -124,17 +124,17 @@ int main(void) {
     std::cout << "CCR CREATED" << std::endl;
 
     TWR twrBordeaux("BORDEAUX", 2, mtx, 360.0f, 855.0f);  
-    TWR twrParis("PARIS", 10, mtx, 675.0f, 315.0f);  
-    TWR twrMarseille("MARSEILLE", 10, mtx, 900.0f, 1013.0f);
-    TWR twrLille("LILLE", 10, mtx, 729.0f, 108.0f);
-    TWR twrBonifacio("BONIFACIO", 1, mtx, 1300.0f, 1240.0f); 
+    TWR twrParis("PARIS", 2, mtx, 675.0f, 315.0f);  
+    TWR twrMarseille("MARSEILLE", 2, mtx, 900.0f, 1013.0f);
+    TWR twrLille("LILLE", 2, mtx, 729.0f, 108.0f);
+    TWR twrBonifacio("BONIFACIO", 2, mtx, 1300.0f, 1240.0f); 
     std::cout << "TWRs created" << std::endl;
 
-    APP appBordeaux("APP_BORDEAUX", 5.0f, &twrBordeaux, mtx);
-    APP appParis("APP_PARIS", 5.0f, &twrParis, mtx);
-	APP appMarseille("APP_MARSEILLE", 5.0f, &twrMarseille, mtx);
-	APP appLille("APP_LILLE", 5.0f, &twrLille, mtx);
-	APP appBonifacio("APP_BONIFACIO", 5.0f, &twrBonifacio, mtx);
+    APP appBordeaux("APP_BORDEAUX", 60.0f, &twrBordeaux, mtx);
+    APP appParis("APP_PARIS", 60.0f, &twrParis, mtx);
+	APP appMarseille("APP_MARSEILLE", 60.0f, &twrMarseille, mtx);
+	APP appLille("APP_LILLE", 60.0f, &twrLille, mtx);
+	APP appBonifacio("APP_BONIFACIO", 60.0f, &twrBonifacio, mtx);
     std::cout << "APPs created" << std::endl;
 
     Plane planeAFR10("AFR10", 35, &appBordeaux, &twrMarseille, mtx);
