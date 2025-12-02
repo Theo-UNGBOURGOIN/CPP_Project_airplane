@@ -28,4 +28,6 @@ public:
     void landing(Plane* plane);
     Position twrGetPos();
     std::vector<Plane*>& getParking();
+    bool isParked(Plane& plane); 
+	bool placeInParking();
 };

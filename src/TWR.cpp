@@ -36,3 +36,17 @@ Position TWR::twrGetPos() {
 std::vector<Plane*>& TWR::getParking() { 
 	return Parking;
 }
+
+bool TWR::placeInParking() {
+	// Vérifier si le parking n'est pas plein
+	if (parkingSize_ - Parking.size() > 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+bool TWR::isParked(Plane& plane) {
+	return std::find(Parking.begin(), Parking.end(), &plane) != Parking.end();
+}

@@ -19,7 +19,8 @@ enum struct statePlane {
     FLYING,
     LANDING,
     TAKEOFF,
-    ONGROUND
+    ONGROUND,
+    HOLDING
 };
 
 class Plane;
@@ -51,5 +52,6 @@ public:
     Position getTrajectory(); 
     void setState(statePlane newState) { state_ = newState; }
     statePlane getState();
+	APP* getTarget() { return target_; }
     // ~Plane();
 };

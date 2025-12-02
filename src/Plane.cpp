@@ -65,17 +65,25 @@ void Plane::run() {
     }
     state_ = statePlane::TAKEOFF;
     float currentSpeed = 0.;
+	float currentAltitude = -350.; // avoid starting altitude to 350
     while (isRunning()) {
         if (state_ == statePlane::TAKEOFF && currentSpeed < speed_) {
             currentSpeed += 1.0f;
+			currentAltitude += 350.0f;
+            pos_.altitude_ = currentAltitude;
             if (currentSpeed == speed_) {
                 state_ = statePlane::FLYING;
             }
         }
         if (state_ == statePlane::FLYING) {
-            currentSpeed = speed_;
+            speed_ = currentSpeed;
+			pos_.altitude_ = currentAltitude;
         }
         if (state_ == statePlane::LANDING) {
+            if (currentAltitude >= 0.0f) {
+                currentAltitude -= 350.0f;
+                pos_.altitude_ = currentAltitude;
+			}
             Position twrPos = target_->getTwr()->twrGetPos();
             float dx = twrPos.x_ - pos_.x_;
             float dy = twrPos.y_ - pos_.y_;
@@ -90,7 +98,12 @@ void Plane::run() {
         pos_.x_ += trajectory_.x_ * currentSpeed * 0.3f;
         pos_.y_ += trajectory_.y_ * currentSpeed * 0.3f;
         std::ostringstream os;
-        os << "Pos: " << name_ << "   " << (*this).fgetpos().x_ << "   " << (*this).fgetpos().y_ << "   " << (*this).fgetpos().altitude_ << std::endl;
+        os << "Plane: " << name_
+            << " | X: " << (*this).fgetpos().x_
+            << " | Y: " << (*this).fgetpos().y_
+            << " | Speed: " << currentSpeed
+            << " | Altitude: " << (*this).fgetpos().altitude_ << std::endl;
+        
         {
             std::lock_guard<std::mutex> lock(globalCoutMutex);
             std::cout << os.str();
@@ -137,3 +150,4 @@ Position Plane::getTrajectory() {
 statePlane Plane::getState() {
 	return state_;
 }
+

@@ -42,12 +42,17 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
         return;
     }
 
+    Texture appRedTexture;
+    if (!appRedTexture.loadFromFile(std::string(_PATH_IMG_) + "aairportRed.png")) {
+        std::cerr << "Erreur chargement APP" << std::endl;
+        return;
+    }
+
     // Créer les sprites pour les APPs
     std::vector<Sprite> appShapes;
     for (auto* appPtr : apps) {
         Sprite appSprite(appTexture);
         appSprite.setScale({ 0.2f, 0.2f });
-        // Centrer l'origine du sprite
         Vector2u texSize = appTexture.getSize();
         appSprite.setOrigin({ texSize.x / 2.0f, texSize.y / 2.0f });
         appShapes.push_back(appSprite);
@@ -78,6 +83,14 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
         // Dessiner les APPs 
         for (size_t i = 0; i < appShapes.size(); ++i) {
+            // Vérifier si le parking a de la place et changer la texture
+            if (apps[i]->getTwr()->placeInParking()) {
+                appShapes[i].setTexture(appTexture);  // Vert = place disponible
+            }
+            else {
+                appShapes[i].setTexture(appRedTexture);  // Rouge = plein
+            }
+
             float appX = apps[i]->getPos().x_;
             float appY = apps[i]->getPos().y_;
             appShapes[i].setPosition({ appX, appY });
@@ -86,6 +99,9 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
         // Mettre à jour et dessiner tous les avions
         for (size_t i = 0; i < planeShapes.size(); ++i) {
+            if (planes[i]->getTarget()->getTwr()->isParked(*planes[i])) {
+                continue;  // Passer à l'avion suivant sans le dessiner
+            }
             float planeX = planes[i]->fgetpos().x_;
             float planeY = planes[i]->fgetpos().y_;
             planeShapes[i].setPosition({ planeX, planeY });
@@ -107,11 +123,11 @@ int main(void) {
     CCR CCR("GLOBAL", mtx);
     std::cout << "CCR CREATED" << std::endl;
 
-    TWR twrBordeaux("BORDEAUX", 10, mtx, 360.0f, 855.0f);  
+    TWR twrBordeaux("BORDEAUX", 2, mtx, 360.0f, 855.0f);  
     TWR twrParis("PARIS", 10, mtx, 675.0f, 315.0f);  
     TWR twrMarseille("MARSEILLE", 10, mtx, 900.0f, 1013.0f);
     TWR twrLille("LILLE", 10, mtx, 729.0f, 108.0f);
-    TWR twrBonifacio("BONIFACIO", 10, mtx, 1300.0f, 1240.0f); 
+    TWR twrBonifacio("BONIFACIO", 1, mtx, 1300.0f, 1240.0f); 
     std::cout << "TWRs created" << std::endl;
 
     APP appBordeaux("APP_BORDEAUX", 5.0f, &twrBordeaux, mtx);
@@ -124,7 +140,8 @@ int main(void) {
     Plane planeAFR10("AFR10", 35, &appBordeaux, &twrMarseille, mtx);
     Plane planeAFR50("AFR50", 35, &appParis, &twrBordeaux, mtx);
     Plane planeA380("AIM90", 35, &appBordeaux, &twrParis, mtx);
-	Plane planeDLH20("DLH20", 35, &appBordeaux, &twrLille, mtx);
+	Plane planeDLH20("DLH20", 35, &appBonifacio, &twrLille, mtx);
+    Plane planeAZE20("AZE20", 35, &appBordeaux, &twrLille, mtx);
     std::cout << "Planes created" << std::endl;
 
     CCR.addAPP(appBordeaux);
@@ -135,6 +152,7 @@ int main(void) {
     CCR.addPlane(planeAFR10);
     CCR.addPlane(planeAFR50);
     CCR.addPlane(planeA380);
+	CCR.addPlane(planeAZE20);
     std::cout << "CCR configured" << std::endl;
 
     twrBordeaux.start();
@@ -152,9 +170,10 @@ int main(void) {
     planeAFR50.start();
     planeA380.start();
     planeDLH20.start();
+    planeAZE20.start(); 
 
     std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille, &appLille, &appBonifacio};
-    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20 };
+    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20, &planeAZE20 };
 
     initWindow(apps, planes);
 
