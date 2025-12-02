@@ -15,6 +15,12 @@ using std::chrono::milliseconds;
 using namespace std::chrono_literals;
 
 struct Position; 
+enum struct statePlane {
+    FLYING,
+    LANDING,
+    TAKEOFF,
+    ONGROUND
+};
 
 class Plane;
 class APP; 
@@ -28,6 +34,7 @@ private:
     TWR* twr_ = nullptr;*/
     Position pos_; 
     Position trajectory_;
+    statePlane state_ = statePlane::ONGROUND;
     std::string name;  
     // float radius_ = 0;       A vérifier si les avions tournent en rond ou pas 
     float speed_ = 0;
@@ -42,5 +49,7 @@ public:
 	void takeof(TWR* spawn);
     Position fgetpos(); 
     Position getTrajectory(); 
+    void setState(statePlane newState) { state_ = newState; }
+    statePlane getState();
     // ~Plane();
 };

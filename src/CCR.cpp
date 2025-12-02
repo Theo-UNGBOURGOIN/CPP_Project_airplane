@@ -10,35 +10,69 @@ CCR::CCR(const std::string& name, std::mutex& mtx) : Agent(name, mtx) {
 
 };
 
+//void CCR::run() {
+//	while (isRunning()) {
+//		for (auto a : app_) {
+//			for (auto p : plane_) {
+//				if (pow(p->fgetpos().x_ - a->getPos().x_, 2) + pow(p->fgetpos().y_ - a->getPos().y_, 2) < pow(a->getRadius(), 2) && std::find(a->getTwr()->getParking().begin(), a->getTwr()->getParking().end(), p) == a->getTwr()->getParking().end()) {
+//					handoverToAPP(a, p);
+//					std::cout << "PLANE HANDOVER" << std::endl;
+//					//a->getTwr()->landing(p);
+//				}
+//				else {
+//				    a->delPlane(p);
+//
+//				}
+//			}
+//
+//		}
+//		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+//	}
+//}
+
 void CCR::run() {
-	while (isRunning()) {
-		for (auto a : app_) {
-			for (auto p : plane_) {
-				if (pow(p->fgetpos().x_ - a->getPos().x_, 2) + pow(p->fgetpos().y_ - a->getPos().y_, 2) < pow(a->getRadius(), 2) && std::find(a->getTwr()->getParking().begin(), a->getTwr()->getParking().end(), p) == a->getTwr()->getParking().end()) {
-					handoverToAPP(a, p);
-					std::cout << "PLANE HANDOVER" << std::endl;
-					//a->getTwr()->landing(p);
-				}
-				else {
-				    a->delPlane(p);
+    while (isRunning()) {
+        for (auto p : plane_) {
+            if (p->getState() == statePlane::ONGROUND) {
+                continue;
+            }
 
-				}
-			}
+            for (auto a : app_) {
+                float dx = p->fgetpos().x_ - a->getPos().x_;
+                float dy = p->fgetpos().y_ - a->getPos().y_;
+                float distanceSquared = dx * dx + dy * dy;
+                float radiusSquared = a->getRadius() * a->getRadius();
 
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	}
+                bool isInRange = distanceSquared < radiusSquared;
+                bool alreadyRegistered = std::find(a->getWhosInRange().begin(),
+                    a->getWhosInRange().end(),
+                    p) != a->getWhosInRange().end();
+
+                if (isInRange && !alreadyRegistered) {
+                    a->addPlane(p);
+                    std::cout << "CCR: Plane " << p->getName()
+                        << " handed over to " << a->getName() << std::endl;
+                }
+                else if (!isInRange && alreadyRegistered) {
+                    a->delPlane(p);
+                    std::cout << "CCR: Plane " << p->getName()
+                        << " left " << a->getName() << std::endl;
+                }
+            }
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 }
 
-void CCR::handoverToAPP(APP* app, Plane* plane) {
-	if (app->isPlaneInRange(*plane)) {
-		app->addPlane(plane);
-		return;
-	}
-	else {
-		return;
-	}
-};
+//void CCR::handoverToAPP(APP* app, Plane* plane) {
+//	if (app->isPlaneInRange(*plane)) {
+//		app->addPlane(plane);
+//		return;
+//	}
+//	else {
+//		return;
+//	}
+//};
 
 
 void CCR::addPlane(Plane& plane) {

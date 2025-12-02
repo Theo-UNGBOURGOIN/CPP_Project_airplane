@@ -49,3 +49,7 @@ void APP::delPlane(Plane* plane) {
 TWR* APP::getTwr() {
 	return twr_;
 }
+
+std::vector<Plane*>& APP::getWhosInRange() {
+	return planeInRange_;
+}

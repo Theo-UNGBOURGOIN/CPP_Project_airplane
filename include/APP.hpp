@@ -28,4 +28,5 @@ public:
     void addPlane(Plane* plane); 
     void delPlane(Plane* plane); 
     TWR* getTwr();
+	std::vector<Plane*>& getWhosInRange();
 };
