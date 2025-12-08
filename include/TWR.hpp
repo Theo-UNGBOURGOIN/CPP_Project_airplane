@@ -14,6 +14,7 @@ struct Position;
 class TWR : public Agent {
 
 private:
+    std::mutex mtx_;
     std::queue<std::string> queuelanding;
     std::queue<std::string> queuetakeoff;
     // bool iswayfree;
@@ -21,6 +22,9 @@ private:
     //Journal* Journal; 
     std::vector<Plane*> Parking;
     const int parkingSize_ = 2; 
+    std::vector<APP*> availableAPPs_;
+
+   
 
 public: 
 	TWR(const std::string name, const int parkingSize, std::mutex& mtx, const int x, const int y); 
@@ -30,4 +34,6 @@ public:
     std::vector<Plane*>& getParking();
     bool isParked(Plane& plane); 
 	bool placeInParking();
+    void addAPP(APP* app);
+    
 };

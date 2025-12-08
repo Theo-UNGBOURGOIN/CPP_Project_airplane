@@ -31,7 +31,15 @@ CCR::CCR(const std::string& name, std::mutex& mtx) : Agent(name, mtx) {
 //}
 
 void CCR::run() {
+    for (auto twr : twr_) {
+        for (auto app : app_) {
+            twr->addAPP(app);
+        }
+
+    }
+	std::cout << "RUN CCR" << std::endl;
     while (isRunning()) {
+
         for (auto p : plane_) {
             if (p->getState() == statePlane::ONGROUND) {
                 continue;
@@ -96,3 +104,17 @@ void CCR::addAPP(APP& app) {
 	app_.push_back(&app);
 
 };
+
+void CCR::addTWR(TWR& twr) {
+    if (std::find(twr_.begin(), twr_.end(), &twr) != twr_.end()) {
+        // l'app est déjà dans la liste
+        return;
+    }
+    twr_.push_back(&twr);
+
+}
+
+APP* CCR::askForNewPlane() {
+	int index = rand() % plane_.size();
+	return app_[index];
+}

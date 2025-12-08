@@ -53,5 +53,9 @@ public:
     void setState(statePlane newState) { state_ = newState; }
     statePlane getState();
 	APP* getTarget() { return target_; }
+    void setTarget(APP* newTarget);
+    void updateTrajectory();
+    // void resetPosition(float x, float y, float altitude);
+    bool checkCollision(Plane& other, float minDistance);
     // ~Plane();
 };

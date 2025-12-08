@@ -11,7 +11,9 @@ Agent::~Agent() {
 
 void Agent::start() {
 	if (running_) return; // déjà en cours d'exécution
-
+	if(thread_. joinable( )) {
+		thread_. join( );
+	}
 	running_ = true;
 	thread_ = std::thread([this] {this->run();});
 }
