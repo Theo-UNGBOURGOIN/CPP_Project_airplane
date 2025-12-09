@@ -1,89 +1,104 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <algorithm>
 #include "../include/Plane.hpp"
 #include "../include/APP.hpp"
 #include "../include/TWR.hpp"
 
 TWR::TWR(const std::string name, const int parkingSize, std::mutex& mtx, const int x, const int y) : Agent(name, mtx), parkingSize_(parkingSize) {
-	srand(time(nullptr));
-	Position pos;
-	pos.x_ = x;
-	pos.y_ = y; 
-	pos_ = pos;
+    srand(static_cast<unsigned int>(time(nullptr)));
+    Position pos;
+    pos.x_ = x;
+    pos.y_ = y;
+    pos_ = pos;
 }
 
 void TWR::run() {
-	std::cout << "RUN TWR" << std::endl;
-	// Vérifie si le parking est vide ou non
-	//     Si avions, 20% de chance de repartir toutes les 5 secondes
-	//              Si il repart, on "reset" l'avion en changeant sa trajectoire et sa target aléatoirement 
-	//				et on remet speed, altitude et pos avec les bonnes valeurs
-	//				on remet l'etat en tAKE OFF
-	while (isRunning()) {
-		std::vector<Plane*> ParkingCopy = Parking;
-		for(auto p : Parking){
-			if (p != nullptr) {
-				int nb = rand() % 200 ; 
-				if (nb < 5) {
-					p->setTarget(p->askAPPForNewTarget());
-					while (p->askAPPForNewTarget() == p->getTarget()) {
-						p->setTarget(p->askAPPForNewTarget());
-					}
-					{
-						std::lock_guard<std::mutex> lock(mtx_);
-						std::cout << "Plane " << p->getName() << " new target is " << p->getTarget()->getName() << std::endl;
-						std::cout << "Plane " << p->getName() << " is taking off" << std::endl;
-					}
-					std::this_thread::sleep_for(std::chrono::seconds(5));
-					// p->start();
-					p->setState(statePlane::TAKEOFF);
-					Parking.erase(std::find(Parking.begin(), Parking.end(), p));
-				}
-			}
-		}
-		
-	}
+    {
+        std::lock_guard<std::mutex> lock(mtx_);
+        std::cout << "RUN TWR " << name_ << std::endl;
+    }
+
+    while (isRunning()) {
+        std::vector<Plane*> planesToTakeOff;
+
+        {
+            // copie protégée du parking pour parcourir sans modifier
+            std::lock_guard<std::mutex> lock(mtx_);
+            std::vector<Plane*> parkingCopy = Parking;
+
+            for (auto* p : parkingCopy) {
+                if (p == nullptr) continue;
+
+                // probabilité de décollage de 5%
+                int nb = rand() % 100;
+                if (nb < 5) {
+                    planesToTakeOff.push_back(p);
+                }
+            }
+        }
+
+        for (auto* p : planesToTakeOff) {
+            APP* newTarget = p->askAPPForNewTarget();
+            // on s'assure que l'avion ne reprend pas la même target que son spawn
+            int safety = 0;
+            while (newTarget == p->getTarget() && safety < 10) {
+                newTarget = p->askAPPForNewTarget();
+                ++safety;
+            }
+
+            p->setTarget(newTarget);
+
+            {
+                std::lock_guard<std::mutex> lock(mtx_);
+                std::cout << "Plane " << p->getName() << " new target is " << p->getTarget()->getName() << std::endl;
+                std::cout << "Plane " << p->getName() << " is taking off" << std::endl;
+
+                auto it = std::remove(Parking.begin(), Parking.end(), p);
+                Parking.erase(it, Parking.end());
+            }
+
+            p->setState(statePlane::TAKEOFF);
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
 }
 
 void TWR::landing(Plane* plane) {
+    // si place disponible et avion pas déjà garé
     if (placeInParking() && std::find(Parking.begin(), Parking.end(), plane) == Parking.end()) {
-        // Vérifier que l'avion est très proche de la TWR
         Position planePos = plane->fgetpos();
         Position twrPos = this->twrGetPos();
         float dx = twrPos.x_ - planePos.x_;
         float dy = twrPos.y_ - planePos.y_;
-        float distance = sqrt(dx * dx + dy * dy);
+        float distance = std::sqrt(dx * dx + dy * dy);
+
         if (distance < 5.0f) {
+            std::lock_guard<std::mutex> lock(mtx_);
             Parking.push_back(plane);
-            // plane->stop();
-            std::cout << "Landing" << std::endl;
+            std::cout << "Plane " << plane->getName() << " parked at " << name_ << std::endl;
         }
-    }
-    else {
+    } else {
         plane->setState(statePlane::HOLDING);
     }
 }
 
 Position TWR::twrGetPos() {
-	return pos_;
+    return pos_;
 }
 
-std::vector<Plane*>& TWR::getParking() { 
-	return Parking;
+std::vector<Plane*>& TWR::getParking() {
+    return Parking;
 }
 
 bool TWR::placeInParking() {
-	// Vérifier si le parking n'est pas plein
-	if (parkingSize_ - Parking.size() > 0) {
-		return true;
-	} else {
-		return false;
-	}
+    std::lock_guard<std::mutex> lock(mtx_);
+    return parkingSize_ - static_cast<int>(Parking.size()) > 0;
 }
 
-
 bool TWR::isParked(Plane& plane) {
-	return std::find(Parking.begin(), Parking.end(), &plane) != Parking.end();
+    std::lock_guard<std::mutex> lock(mtx_);
+    return std::find(Parking.begin(), Parking.end(), &plane) != Parking.end();
 }
 

@@ -117,7 +117,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 }
 
 int main(void) {
-    srand(time(NULL));
+    //srand(time(NULL));
     std::mutex mtx;
     std::cout << "Mutex created" << std::endl;
 
@@ -143,6 +143,8 @@ int main(void) {
     Plane planeA380("AIM90", 35, &appBordeaux, &twrParis, mtx);
 	Plane planeDLH20("DLH20", 35, &appBonifacio, &twrLille, mtx);
     Plane planeAZE20("AZE20", 35, &appBordeaux, &twrLille, mtx);
+	Plane planeUAL30("UAL30", 35, &appBordeaux, &twrBonifacio, mtx);
+	Plane planeSWR40("SWR40", 35, &appLille, &twrParis, mtx);
     std::cout << "Planes created" << std::endl;
 
     CCR.addAPP(appBordeaux);
@@ -154,6 +156,9 @@ int main(void) {
     CCR.addPlane(planeAFR50);
     CCR.addPlane(planeA380);
 	CCR.addPlane(planeAZE20);
+	CCR.addPlane(planeDLH20);
+	CCR.addPlane(planeUAL30);
+	CCR.addPlane(planeSWR40);
     
     std::cout << "CCR configured" << std::endl;
 
@@ -173,9 +178,11 @@ int main(void) {
     planeA380.start();
     planeDLH20.start();
     planeAZE20.start(); 
+	planeUAL30.start();
+	planeSWR40.start();
 
     std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille, &appLille, &appBonifacio};
-    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20, &planeAZE20 };
+    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20, &planeAZE20, &planeSWR40, &planeUAL30 };
 
     initWindow(apps, planes);
 
@@ -183,5 +190,8 @@ int main(void) {
 	planeAFR50.stop();
 	planeA380.stop();
     planeDLH20.stop();
+	planeAZE20.stop();
+	planeUAL30.stop();
+	planeSWR40.stop();
     return 0;
 }
