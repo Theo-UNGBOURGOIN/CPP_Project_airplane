@@ -117,6 +117,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 }
 
 int main(void) {
+    srand(time(NULL));
     std::mutex mtx;
     std::cout << "Mutex created" << std::endl;
 
@@ -130,11 +131,11 @@ int main(void) {
     TWR twrBonifacio("BONIFACIO", 2, mtx, 1300.0f, 1240.0f); 
     std::cout << "TWRs created" << std::endl;
 
-    APP appBordeaux("APP_BORDEAUX", 60.0f, &twrBordeaux, mtx);
-    APP appParis("APP_PARIS", 60.0f, &twrParis, mtx);
-	APP appMarseille("APP_MARSEILLE", 60.0f, &twrMarseille, mtx);
-	APP appLille("APP_LILLE", 60.0f, &twrLille, mtx);
-	APP appBonifacio("APP_BONIFACIO", 60.0f, &twrBonifacio, mtx);
+    APP appBordeaux("APP_BORDEAUX", 60.0f, &twrBordeaux, &CCR, mtx);
+    APP appParis("APP_PARIS", 60.0f, &twrParis, &CCR, mtx);
+	APP appMarseille("APP_MARSEILLE", 60.0f, &twrMarseille, &CCR, mtx);
+	APP appLille("APP_LILLE", 60.0f, &twrLille, &CCR, mtx);
+	APP appBonifacio("APP_BONIFACIO", 60.0f, &twrBonifacio, &CCR, mtx);
     std::cout << "APPs created" << std::endl;
 
     Plane planeAFR10("AFR10", 35, &appBordeaux, &twrMarseille, mtx);
@@ -153,6 +154,7 @@ int main(void) {
     CCR.addPlane(planeAFR50);
     CCR.addPlane(planeA380);
 	CCR.addPlane(planeAZE20);
+    
     std::cout << "CCR configured" << std::endl;
 
     twrBordeaux.start();

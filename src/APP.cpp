@@ -6,7 +6,7 @@
 #include "../include/TWR.hpp"
 
 
-APP::APP(const std::string name, const float& range, TWR* twr, std::mutex& mtx) : Agent(name, mtx), range_(range), twr_(twr) {
+APP::APP(const std::string name, const float& range, TWR* twr, CCR* ccr, std::mutex& mtx) : Agent(name, mtx), range_(range), twr_(twr), ccr_(ccr) {
 	pos_ = twr->twrGetPos();
 };
 
@@ -52,4 +52,9 @@ TWR* APP::getTwr() {
 
 std::vector<Plane*>& APP::getWhosInRange() {
 	return planeInRange_;
+}
+
+
+APP* APP::askForNewTarget() {
+	return ccr_->newTarget();
 }

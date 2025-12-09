@@ -18,5 +18,5 @@ public:
 	void addPlane(Plane& plane); 
 	void addAPP(APP& app);
 	void addTWR(TWR& twr); 
-	APP* askForNewPlane();
+	APP* newTarget(); 
 };

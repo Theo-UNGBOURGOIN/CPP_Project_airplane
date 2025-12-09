@@ -10,33 +10,9 @@ CCR::CCR(const std::string& name, std::mutex& mtx) : Agent(name, mtx) {
 
 };
 
-//void CCR::run() {
-//	while (isRunning()) {
-//		for (auto a : app_) {
-//			for (auto p : plane_) {
-//				if (pow(p->fgetpos().x_ - a->getPos().x_, 2) + pow(p->fgetpos().y_ - a->getPos().y_, 2) < pow(a->getRadius(), 2) && std::find(a->getTwr()->getParking().begin(), a->getTwr()->getParking().end(), p) == a->getTwr()->getParking().end()) {
-//					handoverToAPP(a, p);
-//					std::cout << "PLANE HANDOVER" << std::endl;
-//					//a->getTwr()->landing(p);
-//				}
-//				else {
-//				    a->delPlane(p);
-//
-//				}
-//			}
-//
-//		}
-//		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//	}
-//}
 
 void CCR::run() {
-    for (auto twr : twr_) {
-        for (auto app : app_) {
-            twr->addAPP(app);
-        }
-
-    }
+    
 	std::cout << "RUN CCR" << std::endl;
     while (isRunning()) {
 
@@ -114,7 +90,7 @@ void CCR::addTWR(TWR& twr) {
 
 }
 
-APP* CCR::askForNewPlane() {
-	int index = rand() % plane_.size();
-	return app_[index];
-}
+APP* CCR::newTarget() {
+    int i = rand() % app_.size(); 
+    return app_[i]; 
+};

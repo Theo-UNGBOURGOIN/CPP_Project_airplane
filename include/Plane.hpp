@@ -58,4 +58,5 @@ public:
     // void resetPosition(float x, float y, float altitude);
     bool checkCollision(Plane& other, float minDistance);
     // ~Plane();
+	APP* askAPPForNewTarget();
 };

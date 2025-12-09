@@ -54,32 +54,42 @@ void Plane::run() {
             float dy = target_->getPos().y_ - currentPos.y_;
             float distance = sqrt(dx * dx + dy * dy);
             if (distance < target_->getRadius()) {
+				std::lock_guard<std::mutex> lock(globalCoutMutex);
                 std::cout << "Plane " << name_ << " is close to target, requesting landing..." << std::endl;
                 state_ = statePlane::LANDING;
                 
             }
         }
         if (state_ == statePlane::HOLDING) {
-            float range = target_->getRadius() - 1.0f;
+            while (target_->getTwr()->placeInParking() == 0) {
+                float range = target_->getRadius() - 1.0f;
 
-            pos_.x_ = holdingCenter_.x_ + range * std::cos(holdingAngle) ;
-            pos_.y_ = holdingCenter_.y_ + range * std::sin(holdingAngle) ;
+                pos_.x_ = holdingCenter_.x_ + range * std::cos(holdingAngle);
+                pos_.y_ = holdingCenter_.y_ + range * std::sin(holdingAngle);
 
-            holdingAngle += 0.05f;
+                holdingAngle += 0.05f;
 
-            if (holdingAngle > 2 * M_PI) {
-                holdingAngle -= 2 * M_PI;
+                if (holdingAngle > 2 * M_PI) {
+                    holdingAngle -= 2 * M_PI;
+                }
+
+                float nextX = holdingCenter_.x_ + range * std::cos(holdingAngle + 0.05f);
+                float nextY = holdingCenter_.y_ + range * std::sin(holdingAngle + 0.05f);
+                trajectory_.x_ = nextX - pos_.x_;
+                trajectory_.y_ = nextY - pos_.y_;
+                float norm = sqrt(trajectory_.x_ * trajectory_.x_ + trajectory_.y_ * trajectory_.y_);
+                if (norm > 0) {
+                    trajectory_.x_ /= norm;
+                    trajectory_.y_ /= norm;
+                }
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
             }
-
-            float nextX = holdingCenter_.x_ + range * std::cos(holdingAngle + 0.05f);
-            float nextY = holdingCenter_.y_ + range * std::sin(holdingAngle + 0.05f);
-            trajectory_.x_ = nextX - pos_.x_;
-            trajectory_.y_ = nextY - pos_.y_;
-            float norm = sqrt(trajectory_.x_ * trajectory_.x_ + trajectory_.y_ * trajectory_.y_);
-            if (norm > 0) {
-                trajectory_.x_ /= norm;
-                trajectory_.y_ /= norm;
-            }
+            // recaluler l'angle pour aller vers la twr 
+   //          Position currentPos = fgetpos();
+   //          Position twrPos = target_->getTwr()->twrGetPos();
+			// this->trajectory_.x_ = twrPos.x_ - currentPos.x_;
+			// this->trajectory_.y_ = twrPos.y_ - currentPos.y_;
+            state_ = statePlane::LANDING;
         }
         if (state_ == statePlane::LANDING) {
             target_->getTwr()->landing(this);
@@ -149,3 +159,18 @@ statePlane Plane::getState() {
 	return state_;
 }
 
+APP* Plane::askAPPForNewTarget() {
+	return target_->askForNewTarget();
+};
+
+void Plane::setTarget(APP* newTarget) {
+    target_ = newTarget;
+    Position newTrajectory;
+    newTrajectory.x_ = target_->getPos().x_ - pos_.x_;
+    newTrajectory.y_ = target_->getPos().y_ - pos_.y_;
+    float norme = sqrt(newTrajectory.x_ * newTrajectory.x_ + newTrajectory.y_ * newTrajectory.y_);
+    newTrajectory.x_ = newTrajectory.x_ / norme;
+    newTrajectory.y_ = newTrajectory.y_ / norme;
+    trajectory_ = newTrajectory;
+	
+}
