@@ -138,17 +138,17 @@ int main(void) {
 	APP appBonifacio("APP_BONIFACIO", 60.0f, &twrBonifacio, &CCR, mtx);
     std::cout << "APPs created" << std::endl;
 
-    Plane planeAFR10("AFR10", 35, &appBordeaux, &twrMarseille, mtx);
-    Plane planeAFR50("AFR50", 35, &appParis, &twrBordeaux, mtx);
-    Plane planeA380("AIM90", 35, &appBordeaux, &twrParis, mtx);
-	Plane planeDLH20("DLH20", 35, &appBonifacio, &twrLille, mtx);
-    Plane planeAZE20("AZE20", 35, &appBordeaux, &twrLille, mtx);
-	Plane planeUAL30("UAL30", 35, &appBordeaux, &twrBonifacio, mtx);
-	Plane planeSWR40("SWR40", 35, &appLille, &twrParis, mtx);
+    Plane planeAFR10("AFR10", 30, &appBordeaux, &twrMarseille, mtx);
+    Plane planeAFR50("AFR50", 40, &appParis, &twrBordeaux, mtx);
+    Plane planeA380("AIM90", 32, &appBordeaux, &twrParis, mtx);
+	Plane planeDLH20("DLH20", 33, &appBonifacio, &twrLille, mtx);
+    Plane planeAZE20("AZE20", 41, &appBordeaux, &twrLille, mtx);
+	Plane planeUAL30("UAL30", 37, &appBordeaux, &twrBonifacio, mtx);
+	Plane planeSWR40("SWR40", 38, &appLille, &twrParis, mtx);
     std::cout << "Planes created" << std::endl;
 
-    CCR.addAPP(appBordeaux);
     CCR.addAPP(appParis);
+    CCR.addAPP(appBordeaux);
 	CCR.addAPP(appMarseille);
     CCR.addAPP(appLille);
     CCR.addAPP(appBonifacio); 
@@ -162,13 +162,13 @@ int main(void) {
     
     std::cout << "CCR configured" << std::endl;
 
-    twrBordeaux.start();
     twrParis.start();
+    twrBordeaux.start();
 	twrMarseille.start();
     twrLille.start();
-    twrBonifacio.start(); 
-    appBordeaux.start();
+    twrBonifacio.start();
     appParis.start();
+    appBordeaux.start();
 	appMarseille.start();
     appLille.start();
     appBonifacio.start();
@@ -181,7 +181,7 @@ int main(void) {
 	planeUAL30.start();
 	planeSWR40.start();
 
-    std::vector<APP*> apps = { &appBordeaux, &appParis, &appMarseille, &appLille, &appBonifacio};
+    std::vector<APP*> apps = { &appParis, &appBordeaux, &appMarseille, &appLille, &appBonifacio};
     std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20, &planeAZE20, &planeSWR40, &planeUAL30 };
 
     initWindow(apps, planes);
