@@ -46,8 +46,7 @@ private:
 public:
     Plane(const std::string& name, const float& speed, APP* target, TWR* spawn, std::mutex& mtx);
     void run() override;
-	void requestlanding(APP* target);
-	void takeof(TWR* spawn);
+	void requestlanding(APP* target); 
     Position fgetpos(); 
     Position getTrajectory(); 
     void setState(statePlane newState) { state_ = newState; }
