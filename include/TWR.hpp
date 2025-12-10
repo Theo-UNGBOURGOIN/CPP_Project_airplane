@@ -21,7 +21,7 @@ private:
     Position pos_;
     //Journal* Journal; 
     std::vector<Plane*> Parking;
-    const int parkingSize_ = 2; 
+    const int parkingSize_ = 30; 
 
 public: 
 	TWR(const std::string name, const int parkingSize, std::mutex& mtx, const int x, const int y); 
