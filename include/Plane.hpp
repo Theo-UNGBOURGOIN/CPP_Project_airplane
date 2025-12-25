@@ -20,7 +20,8 @@ enum struct statePlane {
     LANDING,
     TAKEOFF,
     ONGROUND,
-    HOLDING
+    HOLDING,
+    AVOIDING
 };
 
 class Plane;
