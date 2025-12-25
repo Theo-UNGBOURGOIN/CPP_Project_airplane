@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <SFML/Graphics.hpp>
 #include "../include/Plane.hpp"
 #include "../include/APP.hpp"
 #include "../include/TWR.hpp"
@@ -44,6 +45,7 @@ void Plane::run() {
 	Position holdingCenter_ = target_->getPos();
 	float holdingAngle = std::atan2(pos_.y_ - holdingCenter_.y_, pos_.x_ - holdingCenter_.x_);
 	statePlane lastState = state_;  // pour détecter les transitions
+
 
 	while (isRunning()) {
 		if (state_ == statePlane::TAKEOFF && currentSpeed < speed_) {
@@ -152,7 +154,7 @@ void Plane::run() {
 			float distanceToTwr = std::sqrt(dx * dx + dy * dy);
 
 			if (distanceToTwr > 1.0f) {
-				currentSpeed = std::max(0.0f, currentSpeed - (50.0f * (1.0f / distanceToTwr)));
+				currentSpeed = std::max(5.0f, currentSpeed - (50.0f * (1.0f / distanceToTwr)));
 			}
 			else {
 				// très proche -> vitesse quasi nulle
@@ -171,6 +173,7 @@ void Plane::run() {
 			if (target_->getTwr()->isParked(*this)) {
 				state_ = statePlane::ONGROUND;
 				currentSpeed = 0.0f;
+				currentAltitude = 0.0f;
 				pos_.altitude_ = 0.0f;
 				trajectory_.x_ = 0.0f;
 				trajectory_.y_ = 0.0f;
