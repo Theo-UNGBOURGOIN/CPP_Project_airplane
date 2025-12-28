@@ -28,19 +28,15 @@ void CCR::run() {
                 float radiusSquared = a->getRadius() * a->getRadius();
 
                 bool isInRange = distanceSquared < radiusSquared;
-                bool alreadyRegistered = std::find(a->getWhosInRange().begin(),
-                    a->getWhosInRange().end(),
-                    p) != a->getWhosInRange().end();
+                bool alreadyRegistered = std::find(a->getWhosInRange().begin(), a->getWhosInRange().end(), p) != a->getWhosInRange().end();
 
                 if (isInRange && !alreadyRegistered) {
                     a->addPlane(p);
-                    std::cout << "CCR: Plane " << p->getName()
-                        << " handed over to " << a->getName() << std::endl;
+                    std::cout << "CCR: Plane " << p->getName() << " handed over to " << a->getName() << std::endl;
                 }
                 else if (!isInRange && alreadyRegistered) {
                     a->delPlane(p);
-                    std::cout << "CCR: Plane " << p->getName()
-                        << " left " << a->getName() << std::endl;
+                    std::cout << "CCR: Plane " << p->getName() << " left " << a->getName() << std::endl;
                 }
             }
         }
