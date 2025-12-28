@@ -76,9 +76,7 @@ void Plane::run() {
 			if (distance < target_->getRadius()) {
 				{
 					std::lock_guard<std::mutex> lock(mtx_);
-					std::cout << "Plane " << name_
-						<< " is close to target " << target_->getName()
-						<< ", requesting landing..." << std::endl;
+					std::cout << "Plane " << name_ << " is close to target " << target_->getName() << ", requesting landing..." << std::endl;
 				}
 				state_ = statePlane::LANDING;
 			}
@@ -140,18 +138,20 @@ void Plane::run() {
 		}
 
 		if (state_ == statePlane::LANDING) {
+			Position twrPos = target_->getTwr()->twrGetPos();
+			float dx = twrPos.x_ - pos_.x_;
+			float dy = twrPos.y_ - pos_.y_;
+			float distanceToTwr = std::sqrt(dx * dx + dy * dy);
+
 			// descente progressive
 			if (currentAltitude > 0.0f) {
-				currentAltitude -= 350.0f;
+				float coefficientAngle = 3.0f * M_PI / 180.0f;
+				currentAltitude = currentAltitude - currentAltitude / (distanceToTwr * coefficientAngle) + 2000.0f; 
 				if (currentAltitude < 0.0f) currentAltitude = 0.0f;
 				pos_.altitude_ = currentAltitude;
 			}
 
 			// Ralentissement en s'approchant de la TWR
-			Position twrPos = target_->getTwr()->twrGetPos();
-			float dx = twrPos.x_ - pos_.x_;
-			float dy = twrPos.y_ - pos_.y_;
-			float distanceToTwr = std::sqrt(dx * dx + dy * dy);
 
 			if (distanceToTwr > 1.0f) {
 				currentSpeed = std::max(5.0f, currentSpeed - (50.0f * (1.0f / distanceToTwr)));
@@ -189,11 +189,7 @@ void Plane::run() {
 		}
 
 		std::ostringstream os;
-		os << "Plane: " << name_
-			<< " | X: " << fgetpos().x_
-			<< " | Y: " << fgetpos().y_
-			<< " | Speed: " << currentSpeed
-			<< " | Altitude: " << fgetpos().altitude_ << std::endl;
+		os << "Plane: " << name_ << " | X: " << fgetpos().x_ << " | Y: " << fgetpos().y_ << " | Speed: " << currentSpeed << " | Altitude: " << fgetpos().altitude_ << std::endl;
 		{
 			std::lock_guard<std::mutex> lock(mtx_);
 			std::cout << os.str();
