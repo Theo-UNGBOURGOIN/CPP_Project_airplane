@@ -1,14 +1,14 @@
 # CPP_Project_airplane
 
-Modélisation simplifiée du contrôle de la circulation aérienne réalisée avec le langage C++ ainsi que la librairie SFML.
+ModÃ©lisation simplifiÃ©e du contrÃ´le de la circulation aÃ©rienne rÃ©alisÃ©e avec le langage C++ ainsi que la librairie SFML.
 
 ## Fichiers requis
 
-Ce projet requiert l'utilisation du dossier SFML_3.0.2, contenant les différents sprites utilisés pour la simulation.
+Ce projet requiert l'utilisation du dossier SFML_3.0.2, contenant les diffÃ©rents sprites utilisÃ©s pour la simulation.
 
 ## Emplacement
 
-Le dossier SFML_3.0.2 doit être placé à la racine de votre disque principal (C:\), ou de modifier la ligne 14 du fichier main.cpp
+Le dossier SFML_3.0.2 nÃ©cessite d'Ãªtre placÃ© Ã  la racine de votre disque principal (C:\), ou de modifier la ligne 14 du fichier main.cpp
 pour remplacer le chemin par votre emplacement du dossier.
 
 ```bash
@@ -19,9 +19,9 @@ pour remplacer le chemin par votre emplacement du dossier.
 
 Ce projet utilise la version 3.31 de CMake.
 
-**NOTE:** Il est possible que cette version de CMake, présente dans le fichier CMakeLists.txt placé à la racine du projet, ne convienne 
-pas à certaines machines lors de la compilation. Il est alors nécessaire de passer à une version ultérieure.
+**NOTE:** Il est possible que cette version de CMake, prÃ©sente dans le fichier CMakeLists.txt placÃ© Ã  la racine du projet, ne convienne 
+pas Ã  certaines machines lors de la compilation. Il est alors nÃ©cessaire de passer Ã  une version ultÃ©rieure.
 
 ## Auteurs
 
-Projet réalisé par ABEELE Alexandre et UNG-BOURGOIN Théo, étudiants CIR2 à JUNIA - ISEN
+Projet rÃ©alisÃ© par ABEELE Alexandre et UNG-BOURGOIN ThÃ©o, Ã©tudiants CIR2 Ã  JUNIA - ISEN
