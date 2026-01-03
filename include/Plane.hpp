@@ -44,6 +44,9 @@ private:
     // float conso = 0;  
     APP* target_; 
     // high_resolution_clock::time_point initial_clock_;
+    Position avoidingInitialTrajectory_;
+    int avoidingSteps_ = 0;
+    bool avoidingInit_ = false;
 public:
     Plane(const std::string& name, const float& speed, APP* target, TWR* spawn, std::mutex& mtx);
     void run() override;
