@@ -183,6 +183,35 @@ void Plane::run() {
 			}
 		}
 
+		if (state_ == statePlane::AVOIDING) {
+			float deviation = 20.f * M_PI / 180.f;
+
+			if (!avoidingInit_) {
+				avoidingInit_ = true;
+				avoidingSteps_ = 0;
+
+				avoidingInitialTrajectory_ = trajectory_;
+
+				float angle = std::atan2(trajectory_.y_, trajectory_.x_);
+				angle -= deviation;
+
+				trajectory_.x_ = std::cos(angle);
+				trajectory_.y_ = std::sin(angle);
+			}
+
+			pos_.x_ += trajectory_.x_ * currentSpeed * 0.01f;
+			pos_.y_ += trajectory_.y_ * currentSpeed * 0.01f;
+
+			avoidingSteps_++;
+
+			if (avoidingSteps_ > 13) {
+				trajectory_ = avoidingInitialTrajectory_;
+				avoidingInit_ = false;
+				state_ = statePlane::FLYING;
+			}
+
+		}
+
 		if (state_ != statePlane::HOLDING && state_ != statePlane::ONGROUND) {
 			pos_.x_ += trajectory_.x_ * currentSpeed * 0.3f;
 			pos_.y_ += trajectory_.y_ * currentSpeed * 0.3f;
