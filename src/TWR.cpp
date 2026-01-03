@@ -77,17 +77,20 @@ void TWR::landing(Plane* plane) {
 	float dy = twrPos.y_ - planePos.y_;
 	float distance = std::sqrt(dx * dx + dy * dy);
 
-	std::lock_guard<std::mutex> lock(mtx_);
+	/*std::lock_guard<std::mutex> lock(mtx_);*/
 	bool hasRoom = parkingSize_ - static_cast<int>(Parking.size()) > 0;
 	bool alreadyParked = std::find(Parking.begin(), Parking.end(), plane) != Parking.end();
 
 	if (hasRoom && !alreadyParked && distance < 5.0f) {
 		Parking.push_back(plane);
 		plane->setState(statePlane::ONGROUND);
-		std::cout << "Plane " << plane->getName() << " parked at " << name_ << std::endl;
+		{
+			std::lock_guard<std::mutex> lock(mtx_);
+			std::cout << "Plane " << plane->getName() << " parked at " << name_ << std::endl;
+		}
 	}
 	else if (!hasRoom && !alreadyParked) {
-		// pas de place -> renvoyer l'avion en HOLDING
+		// pas de place -> on renvoie l'avion en HOLDING
 		plane->setState(statePlane::HOLDING);
 	}
 }
