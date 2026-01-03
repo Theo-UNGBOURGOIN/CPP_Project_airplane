@@ -40,6 +40,34 @@ void CCR::run() {
                 }
             }
         }
+        for (int i = 0; i < plane_.size(); ++i) {
+            Plane* p1 = plane_[i];
+            if (p1->getState() != statePlane::FLYING) {
+                continue;
+            }
+            for (int j = i + 1; j < plane_.size(); ++j) {
+                Plane* p2 = plane_[j];
+                if (p2->getState() != statePlane::FLYING) {
+                    continue;
+                }
+                float dx = p2->fgetpos().x_ - p1->fgetpos().x_;
+                float dy = p2->fgetpos().y_ - p1->fgetpos().y_;
+                float distance = std::sqrt(dx * dx + dy * dy);
+
+
+
+                // collision frontale 
+                if (p1->getTrajectory().x_ * p2->getTrajectory().x_ + p1->getTrajectory().y_ * p2->getTrajectory().y_ < 0 && distance < 300 && p1->getState() != statePlane::AVOIDING && p2->getState() != statePlane::AVOIDING) {
+
+                    std::cout << "COLLISION FRONTALE DETECTEE entre " << p1->getName() << " et " << p2->getName() << std::endl;
+
+                    p1->setState(statePlane::AVOIDING);
+                    p2->setState(statePlane::AVOIDING);
+
+                }
+
+            }
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
