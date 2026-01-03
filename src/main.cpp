@@ -78,7 +78,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
             }
         }
 
-        window.clear();
+        window.clear(Color::White);
         window.draw(backgroundSprite);
 
         // Dessiner les APPs 
