@@ -263,79 +263,79 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
 int main(void) {
     std::mutex mtx;
-    std::cout << "Mutex created" << std::endl;
-
+    
     CCR CCR("GLOBAL", mtx);
-    std::cout << "CCR CREATED" << std::endl;
-
+    
     TWR twrBordeaux("BORDEAUX", 2, mtx, 360.0f, 855.0f);
     TWR twrParis("PARIS", 2, mtx, 675.0f, 315.0f);
     TWR twrMarseille("MARSEILLE", 2, mtx, 900.0f, 1013.0f);
     TWR twrLille("LILLE", 2, mtx, 729.0f, 108.0f);
     TWR twrBonifacio("BONIFACIO", 2, mtx, 1300.0f, 1240.0f);
-    std::cout << "TWRs created" << std::endl;
+	TWR twrBrest("BREST", 2, mtx, 150.0f, 400.0f);
+	TWR twrStrasbourg("STRASBOURG", 2, mtx, 1100.0f, 300.0f);
+
 
     APP appBordeaux("APP_BORDEAUX", 60.0f, &twrBordeaux, &CCR, mtx);
     APP appParis("APP_PARIS", 60.0f, &twrParis, &CCR, mtx);
     APP appMarseille("APP_MARSEILLE", 60.0f, &twrMarseille, &CCR, mtx);
     APP appLille("APP_LILLE", 60.0f, &twrLille, &CCR, mtx);
     APP appBonifacio("APP_BONIFACIO", 60.0f, &twrBonifacio, &CCR, mtx);
-    std::cout << "APPs created" << std::endl;
+	APP appBrest("APP_BREST", 60.0f, &twrBrest, &CCR, mtx);
+	APP appStrasbourg("APP_STRASBOURG", 60.0f, &twrStrasbourg, &CCR, mtx);
 
     Plane planeAFR10("AFR10", 30, &appBordeaux, &twrMarseille, mtx);
-    Plane planeAFR50("AFR50", 40, &appParis, &twrBordeaux, mtx);
-    Plane planeA380("AIM90", 32, &appBordeaux, &twrParis, mtx);
+    Plane planeAFR20("AFR20", 35, &appParis, &twrMarseille, mtx);
+    Plane planeAFR30("AFR30", 28, &appLille, &twrMarseille, mtx);
+
+    Plane planeA380("A380", 32, &appBordeaux, &twrParis, mtx);
+    Plane planeSWR40("SWR40", 38, &appLille, &twrParis, mtx);
+    Plane planeSWR50("SWR50", 39, &appMarseille, &twrParis, mtx);
+
     Plane planeDLH20("DLH20", 33, &appBonifacio, &twrLille, mtx);
     Plane planeAZE20("AZE20", 41, &appBordeaux, &twrLille, mtx);
+    Plane planeAZE30("AZE30", 36, &appMarseille, &twrLille, mtx);
+
     Plane planeUAL30("UAL30", 37, &appBordeaux, &twrBonifacio, mtx);
-    Plane planeSWR40("SWR40", 38, &appLille, &twrParis, mtx);
-    std::cout << "Planes created" << std::endl;
+    Plane planeUAL40("UAL40", 34, &appParis, &twrBonifacio, mtx);
+    Plane planeUAL50("UAL50", 29, &appLille, &twrBonifacio, mtx);
 
-    CCR.addAPP(appParis);
-    CCR.addAPP(appBordeaux);
-    CCR.addAPP(appMarseille);
-    CCR.addAPP(appLille);
-    CCR.addAPP(appBonifacio);
-    CCR.addPlane(planeAFR10);
-    CCR.addPlane(planeAFR50);
-    CCR.addPlane(planeA380);
-    CCR.addPlane(planeAZE20);
-    CCR.addPlane(planeDLH20);
-    CCR.addPlane(planeUAL30);
-    CCR.addPlane(planeSWR40);
-
-    std::cout << "CCR configured" << std::endl;
-
+    Plane planeAFR50("AFR50", 40, &appParis, &twrBordeaux, mtx);
+  
     twrParis.start();
     twrBordeaux.start();
     twrMarseille.start();
     twrLille.start();
     twrBonifacio.start();
+	twrBrest.start();
+	twrStrasbourg.start();
     appParis.start();
     appBordeaux.start();
     appMarseille.start();
     appLille.start();
     appBonifacio.start();
-    CCR.start();
-    planeAFR10.start();
-    planeAFR50.start();
-    planeA380.start();
-    planeDLH20.start();
-    planeAZE20.start();
-    planeUAL30.start();
-    planeSWR40.start();
+    appBrest.start(); 
+	appStrasbourg.start();
 
-    std::vector<APP*> apps = { &appParis, &appBordeaux, &appMarseille, &appLille, &appBonifacio };
-    std::vector<Plane*> planes = { &planeAFR10, &planeAFR50, &planeA380, &planeDLH20, &planeAZE20, &planeSWR40, &planeUAL30 };
+    std::vector<APP*> apps = { &appParis, &appBordeaux, &appMarseille, &appLille, &appBonifacio, &appBrest, &appStrasbourg };
+    std::vector<Plane*> planes = { &planeAFR10, &planeAFR20, &planeAFR30,  &planeSWR40, &planeAFR50, & planeSWR50,  &planeAZE20, &planeDLH20,   &planeUAL30, &planeAFR10 };
+
+    CCR.start();
+
+	for (auto app : apps) {
+		CCR.addAPP(*app);
+	}
+
+    for(auto p : planes) {
+		CCR.addPlane(*p);    
+		p->start();
+	}
 
     initWindow(apps, planes);
 
-    planeAFR10.stop();
-    planeAFR50.stop();
-    planeA380.stop();
-    planeDLH20.stop();
-    planeAZE20.stop();
-    planeUAL30.stop();
-    planeSWR40.stop();
+	for (auto p : planes) {
+		p->stop();
+	}
+	CCR.stop();
+
     return 0;
 }
