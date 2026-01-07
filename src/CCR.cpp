@@ -50,6 +50,12 @@ void CCR::run() {
                 if (p2->getState() != statePlane::FLYING) {
                     continue;
                 }
+
+                // ignorer les avions qui ont la même target
+                if (p1->getTarget() == p2->getTarget()) {
+                    continue;
+                }
+
                 float dx = p2->fgetpos().x_ - p1->fgetpos().x_;
                 float dy = p2->fgetpos().y_ - p1->fgetpos().y_;
                 float distance = std::sqrt(dx * dx + dy * dy);
@@ -72,15 +78,6 @@ void CCR::run() {
     }
 }
 
-//void CCR::handoverToAPP(APP* app, Plane* plane) {
-//	if (app->isPlaneInRange(*plane)) {
-//		app->addPlane(plane);
-//		return;
-//	}
-//	else {
-//		return;
-//	}
-//};
 
 
 void CCR::addPlane(Plane& plane) {
