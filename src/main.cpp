@@ -9,12 +9,8 @@
 using namespace sf;
 constexpr unsigned WINDOW_SIZE_X = 1500, WINDOW_SIZE_Y = 1500;
 
-#ifdef _MSC_VER
-// #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
-#define _PATH_IMG_ "C:/SFML_3.0.2/img/"
-#else
-#define _PATH_IMG_ "./img/"
-#endif
+#define _PATH_IMG_ "/img/"
+
 
 enum class ViewMode {
     FRANCE,
@@ -132,7 +128,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
     // Charger la carte
     Texture backgroundImage;
-    if (!backgroundImage.loadFromFile(std::string(_PATH_IMG_) + "carte-relief-France.jpg")) {
+    if (!backgroundImage.loadFromFile(std::string(PROJECT_ROOT_DIR) + std::string(_PATH_IMG_) + "carte-relief-France.jpg")) {
         std::cerr << "Erreur chargement carte" << std::endl;
         return;
     }
@@ -141,7 +137,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
     // Charger la texture du zoom aeroport
     Texture airportBackgroundTexture;
-    if (!airportBackgroundTexture.loadFromFile(std::string(_PATH_IMG_) + "airport_view.png")) {
+    if (!airportBackgroundTexture.loadFromFile(std::string(PROJECT_ROOT_DIR) + std::string(_PATH_IMG_) + "airport_view.png")) {
         std::cerr << "Erreur chargement zoom aeroport" << std::endl;
     }
     Sprite airportBackgroundSprite(airportBackgroundTexture);
@@ -154,20 +150,20 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 
     // Charger la texture de l'avion
     Texture planeTexture;
-    if (!planeTexture.loadFromFile(std::string(_PATH_IMG_) + "plane.png")) {
+    if (!planeTexture.loadFromFile(std::string(PROJECT_ROOT_DIR) +  std::string(_PATH_IMG_) + "plane.png")) {
         std::cerr << "Erreur chargement avion" << std::endl;
         return;
     }
 
     // Charger la texture de l'APP
     Texture appTexture;
-    if (!appTexture.loadFromFile(std::string(_PATH_IMG_) + "airport.png")) {
+    if (!appTexture.loadFromFile(std::string(PROJECT_ROOT_DIR) +  std::string(_PATH_IMG_) + "airport.png")) {
         std::cerr << "Erreur chargement APP" << std::endl;
         return;
     }
 
     Texture appRedTexture;
-    if (!appRedTexture.loadFromFile(std::string(_PATH_IMG_) + "aairportRed.png")) {
+    if (!appRedTexture.loadFromFile(std::string(PROJECT_ROOT_DIR) + std::string(_PATH_IMG_) + "aairportRed.png")) {
         std::cerr << "Erreur chargement APP rouge" << std::endl;
         return;
     }
