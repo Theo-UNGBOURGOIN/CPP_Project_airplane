@@ -16,7 +16,8 @@ endif(MSVC)
 find_package(SFML 3 COMPONENTS Window Graphics System REQUIRED)
 link_libraries(SFML::Graphics SFML::Window SFML::System)
 
+add_compile_definitions(
+    PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}"
+)
 
-#add_subdirectory("include")
-#add_subdirectory("SFML_3.0.2")
 add_subdirectory("src")
