@@ -6,6 +6,9 @@
 #include "../include/TWR.hpp"
 #include <iomanip>
 
+#include <fstream>
+#include <string>
+
 std::mutex globalCoutMutex;
 
 Plane::Plane(const std::string& name, const float& speed, APP* target, TWR* spawn, std::mutex& mtx)
@@ -33,6 +36,11 @@ void Plane::run() {
 		std::lock_guard<std::mutex> lock(mtx_);
 		std::cout << "RUN PLANE " << name_ << std::endl;
 	}
+	std::ofstream logFile(std::string(PROJECT_ROOT_DIR) + "/data/Journal.txt", std::ios::app);
+	logFile << name_ << " | " << "Position : x : " << pos_.x_ << " y : " << pos_.y_;
+	logFile << "\n"; 
+
+	 
 
 	// Démarrage standard : si l'avion n'est pas déjà au sol, on le laisse dans son état
 	if (state_ == statePlane::ONGROUND) {

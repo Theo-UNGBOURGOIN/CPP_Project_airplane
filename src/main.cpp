@@ -258,6 +258,7 @@ void initWindow(std::vector<APP*>& apps, std::vector<Plane*>& planes) {
 }
 
 int main(void) {
+
     std::mutex mtx;
     
     CCR CCR("GLOBAL", mtx);
